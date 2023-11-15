@@ -1,0 +1,96 @@
+name: build
+
+on:
+  schedule:
+    - cron: "10 3,6,10,13,16 * * *"
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - 'README.md'
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Check if tag exists
+        run: |
+          wget -O version https://raw.githubusercontent.com/nmgliangwei/qqwry/main/version
+          dat_date=$(cat version)
+          echo "dat_date=${dat_date}" >> $GITHUB_ENV
+          git fetch --tags
+          echo "Value of dat_date: ${dat_date}"
+          if git rev-parse ${dat_date} >/dev/null 2>&1; then
+            echo "Tag already exists, skipping create release"
+            echo "TAG_EXISTS=true" >> $GITHUB_ENV
+          fi
+      - name: Parse
+        if: env.TAG_EXISTS != 'true'
+        run: |
+          yarn install
+          ./build.sh
+      - name: Calculate file hash value
+        id: calculate_hash_value
+        if: env.TAG_EXISTS != 'true'
+        run: |
+          echo "RAW_FILE_HASH=$(sha256sum ./build/raw/qqwry-raw.ipdb | awk '{ print $1 }')" >> $GITHUB_ENV
+          echo "STAND_FILE_HASH=$(sha256sum ./build/stand/qqwry.ipdb | awk '{ print $1 }')" >> $GITHUB_ENV
+
+      - name: Create Release
+        id: create_release
+        uses: ncipollo/release-action@v1
+        if: env.TAG_EXISTS != 'true'
+        with:
+          commit: ${{ env.GITHUB_SHA }}
+          tag: ${{ env.dat_date }}
+          token: ${{ secrets.QQWRYIPDB }}
+          artifacts: build/raw/qqwry-raw.ipdb,build/stand/qqwry.ipdb
+          body: |
+           #### qqwry.ipdb
+
+           | Name               | Value                      |
+           | :----------------: | :------------------------: |
+           | Stand File Download: | https://raw.gitmirror.com/nmgliangwei/qqwry.ipdb/master/qqwry.ipdb |
+           | Stand File hash: | qqwry.ipdb: ${{ env.STAND_FILE_HASH }} |
+           | Raw File Download: | https://raw.gitmirror.com/nmgliangwei/qqwry.ipdb/master/qqwry-raw.ipdb            |
+           | Raw File hash: | qqwry-raw.ipdb: ${{ env.RAW_FILE_HASH }} |
+           <p align="right"><code>Version: ${{ env.dat_date }} </code></p>
+      - name: Calculate repository hash value
+        id: calculate_repo_hash_value
+        if: env.TAG_EXISTS != 'true'
+        run: |
+          echo "STAND_REPO_HASH=$(git show master:qqwry.ipdb | sha256sum | awk '{ print $1 }')" >> $GITHUB_ENV
+          echo "RAW_REPO_HASH=$(git show master:qqwry-raw.ipdb | sha256sum | awk '{ print $1 }')" >> $GITHUB_ENV
+      - name: Check for changes in qqwry.ipdb
+        id: check
+        if: env.TAG_EXISTS != 'true'
+        run: |
+          if [ ! -f qqwry.ipdb ] || [ ! -f qqwry-raw.ipdb ]; then
+            echo "File does not exist"
+            echo "RUN_NEXT_STEP=true" >> $GITHUB_ENV
+          else
+            #比较上面的两个hash值是否相等
+            if [ "${{ env.RAW_FILE_HASH }}" != "${{ env.RAW_REPO_HASH }}" ] || [ "${{ env.STAND_FILE_HASH }}" != "${{ env.STAND_REPO_HASH }}" ]; then
+              echo "File has changed"
+              echo "RUN_NEXT_STEP=true" >> $GITHUB_ENV
+            else
+              echo "File has not changed"
+            fi
+          fi
+      - name: Commit qqwry.ipdb
+        if: env.RUN_NEXT_STEP == 'true' && env.TAG_EXISTS != 'true'
+        env:
+          GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
+          GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
+        run: |
+          git config --global user.name $GIT_USERNAME
+          git config --global user.email $GIT_EMAIL
+          if ! git status -s | grep qqwry.ipdb --quiet ; then
+            mv ./build/raw/qqwry-raw.ipdb qqwry-raw.ipdb
+            mv ./build/stand/qqwry.ipdb qqwry.ipdb
+            git add qqwry.ipdb qqwry-raw.ipdb version
+            git commit -m "Update qqwry.ipdb qqwry-raw.ipdb in  ${{ env.dat_date }}"
+            git push
+          fi
