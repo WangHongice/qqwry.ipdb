@@ -48,7 +48,7 @@ jobs:
           token: ${{ secrets.QQWRYIPDB }}
           artifacts: build/raw/qqwry-raw.ipdb,build/stand/qqwry.ipdb
           body: |
-           #### ipdb File info
+           #### .ipdb File Info
 
            | Name               | Value                      |
            | :----------------: | :------------------------: |
@@ -91,6 +91,6 @@ jobs:
             mv ./build/raw/qqwry-raw.ipdb qqwry-raw.ipdb
             mv ./build/stand/qqwry.ipdb qqwry.ipdb
             git add qqwry.ipdb qqwry-raw.ipdb version
-            git commit -m "Update qqwry.ipdb qqwry-raw.ipdb in  ${{ env.dat_date }}"
+            git commit -m "Update ipdb File in  ${{ env.dat_date }}"
             git push
           fi
