@@ -1,19 +1,19 @@
-# qqwry.ipdb
+# qqwry.ipdb [![build](https://github.com/nmgliangwei/qqwry.ipdb/actions/workflows/build.yml/badge.svg)](https://github.com/nmgliangwei/qqwry.ipdb/actions/workflows/build.yml)
 
 纯真数据库 IPIP.net 格式版，精简并匹配为国家、省、市、运营商。  
-版本随上游 [metowolf/qqwry.dat](https://github.com/metowolf/qqwry.dat) 每周同步更新。
+版本随上游 [nmgliangwei/qqwry](https://github.com/nmgliangwei/qqwry) 每周自动同步更新。
+
+基于[metowolf/qqwry.ipdb](https://github.com/metowolf/qqwry.ipdb)改版而来，将ipdb文件放入仓库中，方便下载。
+
+主要提供 2 种版本的 ipdb 文件：
+
++ 标准版（qqwry.ipdb）
+
++ 原版 (qqwry-raw.ipdb)
+
+主要区别为解析出的字段不同。
 
 ## 标准版
-
-![](https://img.shields.io/npm/v/qqwry.ipdb.svg?style=for-the-badge&label=VERSION)
-![](https://img.shields.io/npm/dm/qqwry.ipdb.svg?style=for-the-badge)
-
-
-|CDN|URL|
-|:---:|---|
-|[jsdelivr](https://cdn.jsdelivr.net/npm/qqwry.ipdb/)|https://cdn.jsdelivr.net/npm/qqwry.ipdb/qqwry.ipdb|
-|[unpkg](https://unpkg.com/browse/qqwry.ipdb/)|https://unpkg.com/qqwry.ipdb/qqwry.ipdb|
-
 
 标准版兼容所有[官方 IPDB 格式解析代码](https://www.ipip.net/product/client.html)，提供与[官方每周高级版](https://www.ipip.net/product/ip.html#ipv4city)相同的五个解析字段。
 
@@ -26,17 +26,13 @@
 |`isp_domain`|运营商名称|
 
 
+|                       标准版最新数据下载地址                        |https://raw.gitmirror.com/nmgliangwei/qqwry.ipdb/master/qqwry.ipdb|
+|:----------------------------------------------------:|---|
+
+上面为国内加速链接，即下即用，每次更新会覆盖之前的内容，如果想要某个时间段的历史数据可在 [` Release ` ](https://github.com/nmgliangwei/qqwry.ipdb/releases) 里进行查看。
+
+
 ## 原版
-
-![](https://img.shields.io/npm/v/qqwry.raw.ipdb.svg?style=for-the-badge&label=VERSION)
-![](https://img.shields.io/npm/dm/qqwry.raw.ipdb.svg?style=for-the-badge)
-
-
-|CDN|URL|
-|:---:|---|
-|[jsdelivr](https://cdn.jsdelivr.net/npm/qqwry.raw.ipdb/)|https://cdn.jsdelivr.net/npm/qqwry.raw.ipdb/qqwry.ipdb|
-|[unpkg](https://unpkg.com/browse/qqwry.raw.ipdb/)|https://unpkg.com/qqwry.raw.ipdb/qqwry.ipdb|
-
 
 原版兼容所有[官方 IPDB 格式解析代码](https://www.ipip.net/product/client.html)，只提供和纯真格式相似的两个解析字段，后面三个字段为兼容占位使用。
 
@@ -48,41 +44,15 @@
 |`pad2`|兼容占位|
 |`pad3`|兼容占位|
 
-## 实例
+|                          原版下载地址                          | https://raw.gitmirror.com/nmgliangwei/qqwry.ipdb/master/qqwry-raw.ipdb |
+|:--------------------------------------------------------:|------------------------------------------------------------------------|
 
-以 [metowolf/ipdb](https://github.com/metowolf/ipdb) 解析库为例，首先安装依赖并下载标准版数据库
+上面为国内加速链接，即下即用，每次更新会覆盖之前的内容，如果想要某个时间段的历史数据可在 [` Release ` ](https://github.com/nmgliangwei/qqwry.ipdb/releases) 里进行查看。
 
-```
-$ yarn add ipdb
-$ yarn add qqwry.ipdb
-```
-
-新建文件 `index.js`
-
-```
-const IPDB = require('ipdb');
-const qqwry_ipdb = require('qqwry.ipdb');
-const ipdb = new IPDB(qqwry_ipdb);
-
-ipdb.find('183.62.57.1');
-/*
-{
-  data: {
-    country_name: '中国',
-    region_name: '广东',
-    city_name: '广州',
-    owner_domain: '',
-    isp_domain: '电信',
-    ip: '183.62.57.1',
-    bitmask: 24
-  },
-  code: 0
-}
-*/
-```
 
 ## 感谢
 
+ - 特别感谢由 [metowolf/qqwry.ipdb](https://github.com/metowolf/qqwry.ipdb) 提供的基础代码
  - 感谢由 [ipdb](https://github.com/metowolf/ipdb) 提供的 IPDB 格式解析解决方案
  - 感谢由 [@ipdb/packer](https://github.com/metowolf/ipdb-packer) 提供的 IPDB 格式打包解决方案
  - 感谢文章 [IPIP.net 地址库格式分析](https://i-meto.com/ipdb-database/) 提供的格式逆向分析
