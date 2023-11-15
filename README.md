@@ -26,7 +26,7 @@
 |`isp_domain`|运营商名称|
 
 
-|                       标准版最新数据下载地址                        |https://raw.gitmirror.com/nmgliangwei/qqwry.ipdb/master/qqwry.ipdb|
+|                       标准版最新数据下载地址                        |https://raw.gitmirror.com/nmgliangwei/qqwry.ipdb/main/qqwry.ipdb|
 |:----------------------------------------------------:|---|
 
 上面为国内加速链接，即下即用，每次更新会覆盖之前的内容，如果想要某个时间段的历史数据可在 [` Release ` ](https://github.com/nmgliangwei/qqwry.ipdb/releases) 里进行查看。
@@ -44,7 +44,7 @@
 |`pad2`|兼容占位|
 |`pad3`|兼容占位|
 
-|                          原版下载地址                          | https://raw.gitmirror.com/nmgliangwei/qqwry.ipdb/master/qqwry-raw.ipdb |
+|                          原版下载地址                          | https://raw.gitmirror.com/nmgliangwei/qqwry.ipdb/main/qqwry-raw.ipdb |
 |:--------------------------------------------------------:|------------------------------------------------------------------------|
 
 上面为国内加速链接，即下即用，每次更新会覆盖之前的内容，如果想要某个时间段的历史数据可在 [` Release ` ](https://github.com/nmgliangwei/qqwry.ipdb/releases) 里进行查看。
