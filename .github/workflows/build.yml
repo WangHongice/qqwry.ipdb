@@ -48,7 +48,7 @@ jobs:
           token: ${{ secrets.QQWRYIPDB }}
           artifacts: build/raw/qqwry-raw.ipdb,build/stand/qqwry.ipdb
           body: |
-           #### qqwry.ipdb
+           #### ipdb File info
 
            | Name               | Value                      |
            | :----------------: | :------------------------: |
