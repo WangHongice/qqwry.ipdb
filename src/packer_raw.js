@@ -24,4 +24,4 @@ let chunk = packer.output([
   'country', 'area', 'pad1', 'pad2', 'pad3'
 ])
 
-fs.writeFileSync('./build/raw/qqwry.ipdb', chunk)
+fs.writeFileSync('./build/raw/qqwry-raw.ipdb', chunk)
