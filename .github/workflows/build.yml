@@ -53,9 +53,9 @@ jobs:
            | Name               | Value                      |
            | :----------------: | :------------------------: |
            | Stand File Download: | https://raw.gitmirror.com/nmgliangwei/qqwry.ipdb/main/qqwry.ipdb |
-           | Stand File hash: | qqwry.ipdb: ${{ env.STAND_FILE_HASH }} |
+           | Stand File sha256: | qqwry.ipdb: ${{ env.STAND_FILE_HASH }} |
            | Raw File Download: | https://raw.gitmirror.com/nmgliangwei/qqwry.ipdb/main/qqwry-raw.ipdb            |
-           | Raw File hash: | qqwry-raw.ipdb: ${{ env.RAW_FILE_HASH }} |
+           | Raw File sha256: | qqwry-raw.ipdb: ${{ env.RAW_FILE_HASH }} |
            <p align="right"><code>Version: ${{ env.dat_date }} </code></p>
       - name: Calculate repository hash value
         id: calculate_repo_hash_value
