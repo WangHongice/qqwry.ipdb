@@ -2,3 +2,12 @@ node_modules
 .DS_Store
 build
 preformat.db
+*/.DS_Store
+.idea/*
+*.iml
+.idea
+.*.swp
+Thumbs.db
+test.*
+*.pyc
+__pycache__
