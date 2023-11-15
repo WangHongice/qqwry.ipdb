@@ -5,7 +5,7 @@ on:
     - cron: "10 3,6,10,13,16 * * *"
   push:
     branches:
-      - master
+      - main
     paths-ignore:
       - 'README.md'
   workflow_dispatch:
@@ -52,17 +52,17 @@ jobs:
 
            | Name               | Value                      |
            | :----------------: | :------------------------: |
-           | Stand File Download: | https://raw.gitmirror.com/nmgliangwei/qqwry.ipdb/master/qqwry.ipdb |
+           | Stand File Download: | https://raw.gitmirror.com/nmgliangwei/qqwry.ipdb/main/qqwry.ipdb |
            | Stand File hash: | qqwry.ipdb: ${{ env.STAND_FILE_HASH }} |
-           | Raw File Download: | https://raw.gitmirror.com/nmgliangwei/qqwry.ipdb/master/qqwry-raw.ipdb            |
+           | Raw File Download: | https://raw.gitmirror.com/nmgliangwei/qqwry.ipdb/main/qqwry-raw.ipdb            |
            | Raw File hash: | qqwry-raw.ipdb: ${{ env.RAW_FILE_HASH }} |
            <p align="right"><code>Version: ${{ env.dat_date }} </code></p>
       - name: Calculate repository hash value
         id: calculate_repo_hash_value
         if: env.TAG_EXISTS != 'true'
         run: |
-          echo "STAND_REPO_HASH=$(git show master:qqwry.ipdb | sha256sum | awk '{ print $1 }')" >> $GITHUB_ENV
-          echo "RAW_REPO_HASH=$(git show master:qqwry-raw.ipdb | sha256sum | awk '{ print $1 }')" >> $GITHUB_ENV
+          echo "STAND_REPO_HASH=$(git show main:qqwry.ipdb | sha256sum | awk '{ print $1 }')" >> $GITHUB_ENV
+          echo "RAW_REPO_HASH=$(git show main:qqwry-raw.ipdb | sha256sum | awk '{ print $1 }')" >> $GITHUB_ENV
       - name: Check for changes in qqwry.ipdb
         id: check
         if: env.TAG_EXISTS != 'true'
