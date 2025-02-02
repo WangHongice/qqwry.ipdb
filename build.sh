@@ -12,7 +12,6 @@ LATEST_VERSION=`node src/version.js`
 if [ $VERSION != $LATEST_VERSION ]; then
   node src/packer.js
   ls -alh build/stand
-  cd ../..
   echo $LATEST_VERSION > version
   cat version
 fi

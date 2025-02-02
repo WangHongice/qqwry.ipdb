@@ -4,7 +4,7 @@ import IPDB from 'ipdb'
 const ipdb = new IPDB('./build/raw/qqwry-raw.ipdb')
 
 let result = ipdb.find('255.255.255.255')
-let version = result.data.region_name.match(/(\d+)/gi).map(x => parseInt(x)).join('.')
+let version = result.data.region_name.match(/(\d+)/gi).join('-')
 
 console.log(version)
 
