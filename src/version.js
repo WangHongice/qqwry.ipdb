@@ -1,7 +1,7 @@
 import fs from 'fs'
 import IPDB from 'ipdb'
 
-const ipdb = new IPDB('./build/raw/qqwry.ipdb')
+const ipdb = new IPDB('./build/raw/qqwry-raw.ipdb')
 
 let result = ipdb.find('255.255.255.255')
 let version = result.data.region_name.match(/(\d+)/gi).map(x => parseInt(x)).join('.')
@@ -20,7 +20,7 @@ let json = {
 
 let index = `
 const { join } = require('path')
-module.exports = join(__dirname, 'qqwry.ipdb')
+module.exports = join(__dirname, 'qqwry-rqw.ipdb')
 `
 
 json.version = version
