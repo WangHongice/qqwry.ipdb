@@ -14,4 +14,5 @@ if [ $VERSION != $LATEST_VERSION ]; then
   ls -alh build/stand
   cd ../..
   echo $LATEST_VERSION > version
+  cat version
 fi
