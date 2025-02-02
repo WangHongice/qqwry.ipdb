@@ -10,13 +10,8 @@ ls -alh build/raw
 VERSION=`cat version`
 LATEST_VERSION=`node src/version.js`
 if [ $VERSION != $LATEST_VERSION ]; then
-  cd build/raw
-  npm publish
-  cd ../..
   node src/packer.js
   ls -alh build/stand
-  cd build/stand
-  npm publish
   cd ../..
   echo $LATEST_VERSION > version
 fi
