@@ -15,9 +15,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - name: Parse
+        env:
+          CZDB_DOWNLOAD_TOKEN: ${{ secrets.CZDB_DOWNLOAD_TOKEN }}
+          CZDB_TOKEN: ${{ secrets.CZDB_TOKEN }}
+        run: |
+          pnpm install
+          ./build.sh
       - name: Check if tag exists
         run: |
-          wget -O version https://raw.githubusercontent.com/nmgliangwei/qqwry/main/version
           dat_date=$(cat version)
           echo "dat_date=${dat_date}" >> $GITHUB_ENV
           git fetch --tags
@@ -26,18 +36,12 @@ jobs:
             echo "Tag already exists, skipping create release"
             echo "TAG_EXISTS=true" >> $GITHUB_ENV
           fi
-      - name: Parse
-        if: env.TAG_EXISTS != 'true'
-        run: |
-          yarn install
-          ./build.sh
       - name: Calculate file hash value
         id: calculate_hash_value
         if: env.TAG_EXISTS != 'true'
         run: |
           echo "RAW_FILE_HASH=$(sha256sum ./build/raw/qqwry-raw.ipdb | awk '{ print $1 }')" >> $GITHUB_ENV
           echo "STAND_FILE_HASH=$(sha256sum ./build/stand/qqwry.ipdb | awk '{ print $1 }')" >> $GITHUB_ENV
-
       - name: Create Release
         id: create_release
         uses: ncipollo/release-action@v1

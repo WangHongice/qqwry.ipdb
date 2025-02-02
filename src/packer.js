@@ -1,41 +1,78 @@
-const fs = require('fs')
-const format = require('./format')
-const range2cidrs = require('./range2cidrs')
+import Decoder from '@ipdb/czdb'
+import Packer from '@ipdb/packer'
+import { range2cidrs } from './network.js'
+import fs from 'node:fs'
+import { formatCountryCode } from './format.js'
 
-const libqqwry = require('lib-qqwry')
-const qqwry = libqqwry(true, './build/qqwry.dat')
+const files = [
+  {
+    version: 4,
+    file: './build/cz88_public_v4.czdb',
+  },
+  {
+    version: 6,
+    file: './build/cz88_public_v6.czdb',
+  }
+]
 
-const Packer = require('@ipdb/packer')
-const packer = new Packer({ipv6: false})
+const noCountryCodeSet = new Set()
+const packer = new Packer({ipv6: true})
+for (const file of files) {
+  const hash = {}
+  const decoder = new Decoder(file.file, process.env.CZDB_TOKEN)
+  decoder.dump(info => {
+    if (!hash[info.regionInfo]) {
+      hash[info.regionInfo] = []
+    }
+    const cidrs = range2cidrs(info.startIp, info.endIp, file.version)
+    hash[info.regionInfo].push(...cidrs)
+  })
+  console.log(`Total ${Object.keys(hash).length} records in ${file.file}`)
 
-const cidrTools = require('cidr-tools')
+  for (const [info, cidrs] of Object.entries(hash)) {
+    // console.log([cidrs[0], info].join('\t'))
+    const t = info.split('\t', 2)
+    // 信息
+    let country = '', region = '', city = '', district = '' , isp = '', owner = ''
+    if (t[0].includes('–')) {
+      const tt = t[0].split('–')
+      country = tt[0]
+      region = tt[1]
+      city = tt[2] || ''
+      district = tt[3] || ''
+    } else {
+      country = t[0]
+    }
 
-let ip = '0.0.0.0'
-let hash = {}
-while (true) {
-  let data = qqwry.searchIPScope(ip, ip)[0]
+    if (t[1] && t[1].includes('/')) {
+      const tt = t[1].split('/')
+      isp = tt[0]
+      owner = tt[1] || ''
+    } else {
+      isp = t[1]
+    }
 
-  let info = format(data.Country, data.Area)
-  let cidrs = range2cidrs(data.begInt, data.endInt)
-  let info_string = [info.country_name, info.region_name, info.city_name, info.owner_domain, info.isp_domain].join('\t')
-  if (!hash[info_string]) hash[info_string] = []
-  hash[info_string].push(...cidrs)
+    let country_code = '', continent_code = ''
+    const country_info = formatCountryCode(country, region)
+    if (country_info !== null) {
+      country_code = country_info[0]
+      continent_code = country_info[1]
+    } else {
+      noCountryCodeSet.add(country)
+    }
 
-  if (data.endIP === '255.255.255.255') break
-  ip = libqqwry.intToIP(data.endInt + 1)
-}
-
-for (let [info, cidrs] of Object.entries(hash)) {
-  console.log([cidrs[0], info].join('\t'))
-  let t = info.split('\t')
-  cidrs = cidrTools.merge(cidrs)
-  for (let cidr of cidrs) {
-    packer.insert(cidr, t)
+    for (const cidr of cidrs) {
+      packer.insert(cidr, [
+        country, region, city, district, owner, isp, country_code, continent_code
+      ])
+    }
   }
 }
 
-let chunk = packer.output([
-  'country_name', 'region_name', 'city_name', 'owner_domain', 'isp_domain',
+console.log('存在以下未正确识别 CountryCode', noCountryCodeSet)
+
+const chunk = packer.output([
+  'country_name', 'region_name', 'city_name', 'district_name', 'owner_domain', 'isp_domain', 'country_code', 'continent_code'
 ])
 
 fs.writeFileSync('./build/stand/qqwry.ipdb', chunk)

@@ -1,7 +1,7 @@
 # qqwry.ipdb [![build](https://github.com/nmgliangwei/qqwry.ipdb/actions/workflows/build.yml/badge.svg)](https://github.com/nmgliangwei/qqwry.ipdb/actions/workflows/build.yml)
 
-纯真数据库 IPIP.net 格式版，精简并匹配为国家、省、市、运营商。  
-版本随上游 [nmgliangwei/qqwry](https://github.com/nmgliangwei/qqwry) 每周自动同步更新。
+纯真数据库 IPIP.net 格式版，精简并匹配为国家、省、市、运营商，支持IPV4/IPV6。  
+版本随上游 纯真官网 自动同步更新。
 
 基于[metowolf/qqwry.ipdb](https://github.com/metowolf/qqwry.ipdb)改版而来，将ipdb文件放入仓库中，方便下载。
 
@@ -15,15 +15,18 @@
 
 ## 标准版
 
-标准版兼容所有[官方 IPDB 格式解析代码](https://www.ipip.net/product/client.html)，提供与[官方每周高级版](https://www.ipip.net/product/ip.html#ipv4city)相同的五个解析字段。
+标准版兼容所有[官方 IPDB 格式解析代码](https://www.ipip.net/product/client.html)，提供与[官方每日专业版](https://www.ipip.net/product/ip.html#ipv4city)类似的以下解析字段。
 
 |name|info|
 |:---:|---|
 |`country_name`|国家名称|
 |`region_name`|区域名称，中国为省份|
 |`city_name`|城市名称，中国为市级|
+|`district_name`|区县名称|
 |`owner_domain`|拥有者域名|
 |`isp_domain`|运营商名称|
+|`country_code`|国家代码，ISO3166-1|
+|`continent_code`|大洲编码|
 
 
 |                       标准版最新数据下载地址                        |https://raw.gitmirror.com/nmgliangwei/qqwry.ipdb/main/qqwry.ipdb|
@@ -38,11 +41,11 @@
 
 |name|info|
 |:---:|---|
-|`country`|国家名称|
-|`area`|区域名称|
-|`pad1`|兼容占位|
-|`pad2`|兼容占位|
-|`pad3`|兼容占位|
+|`country_name`|国家名称，对应纯真国家字段|
+|`region_name`|区域名称，对应纯真区域字段|
+|`city_name`|城市名称，空|
+|`owner_domain`|拥有者域名，空|
+|`isp_domain`|运营商名称，空|
 
 |                          原版下载地址                          | https://raw.gitmirror.com/nmgliangwei/qqwry.ipdb/main/qqwry-raw.ipdb |
 |:--------------------------------------------------------:|------------------------------------------------------------------------|
